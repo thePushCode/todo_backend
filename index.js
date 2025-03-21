@@ -1,8 +1,8 @@
 const express = require("express");
-const app = express();
+const { db } = require("./config/db");
 const cors = require("cors");
 
-const mongoose = require("mongoose");
+const app = express();
 const PORT = 3000;
 
 // body parser
@@ -13,23 +13,11 @@ app.use(express.json());
 app.use(cors());
 
 // routes
-app.use("/api/user", (req, res, next) => {
-  res.send("Welcome to user route");
-});
-
-app.use("/api/todo", (req, res, next) => {
-  res.send("Welcome to todo route");
-});
+app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/todos", require("./routes/todoRoutes"));
 
 // database connection
-mongoose
-  .connect("mongodb://localhost:27017/express-mongo")
-  .then(() => {
-    console.log("Database connected");
-  })
-  .catch((err) => {
-    console.log("Database connection failed", err);
-  });
+db();
 
 // server
 app.listen(PORT, () => {
